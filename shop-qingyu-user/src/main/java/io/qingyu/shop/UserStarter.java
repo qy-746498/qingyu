@@ -3,6 +3,7 @@ package io.qingyu.shop;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Description 启动用户服的类
  */
 @SpringBootApplication
+@EnableDiscoveryClient
 @EnableTransactionManagement(proxyTargetClass = true)
 @MapperScan(value = { "io.qingyu.shop.user.mapper" })
 public class UserStarter {
