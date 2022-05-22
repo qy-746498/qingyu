@@ -6,15 +6,21 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="shop-qingyu-bean" />
+        <module name="shop-qingyu-order" />
+        <module name="shop-qingyu-user" />
+        <module name="shop-qingyu-product" />
         <module name="shop-qingyu-utils" />
+        <module name="shop-qingyu-bean" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="shop-qingyu-bean" options="-parameters" />
+      <module name="shop-qingyu-order" options="-parameters" />
+      <module name="shop-qingyu-product" options="-parameters" />
       <module name="shop-qingyu-springcloud-alibaba" options="-parameters" />
+      <module name="shop-qingyu-user" options="-parameters" />
       <module name="shop-qingyu-utils" options="-parameters" />
     </option>
   </component>
