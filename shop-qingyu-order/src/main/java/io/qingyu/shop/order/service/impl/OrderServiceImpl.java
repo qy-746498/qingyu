@@ -5,6 +5,8 @@ import io.qingyu.shop.bean.Order;
 import io.qingyu.shop.bean.OrderItem;
 import io.qingyu.shop.bean.Product;
 import io.qingyu.shop.bean.User;
+import io.qingyu.shop.order.feifn.ProductService;
+import io.qingyu.shop.order.feifn.UserService;
 import io.qingyu.shop.order.mapper.OrderItemMapper;
 import io.qingyu.shop.order.mapper.OrderMapper;
 import io.qingyu.shop.order.service.OrderService;
@@ -20,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author qingYu
@@ -42,12 +46,18 @@ public class OrderServiceImpl implements OrderService {
     private String productServer = "server-product";
 
     //---------------------------------------------------------------
+    //feign实现负载------------------------
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ProductService productService;
+    //---------------------------------------
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveOrder(OrderParams orderParams) {
         //从Nacos服务中获取用户服务与商品服务的地址
-        String userUrl = this.getServiceUrl(userServer);
-        String productUrl = this.getServiceUrl(productServer);
+//        String userUrl = this.getServiceUrl(userServer);
+//        String productUrl = this.getServiceUrl(productServer);
         //----------------------------------------------------------
         if (orderParams.isEmpty()) {
             throw new RuntimeException("参数异常: " + JSONObject.toJSONString(orderParams));
@@ -55,15 +65,27 @@ public class OrderServiceImpl implements OrderService {
 
 //        User user = restTemplate.getForObject("http://localhost:8060/user/get/" + orderParams.getUserId(), User.class);
         //从Nacos服务中获取用户服务与商品服务的地址--------------------------------------------------------------------------------
-        User user = restTemplate.getForObject("http://" + userUrl + "/user/get/" + orderParams.getUserId(), User.class);
+//        User user = restTemplate.getForObject("http://" + userUrl + "/user/get/" + orderParams.getUserId(), User.class);
         //------------------------------------------------------------------------------------------------------------------
+        //服务端实现负载------------------------------------------------------------------------------------------------------------------
+//        User user = restTemplate.getForObject("http://" + userServer + "/user/get/" + orderParams.getUserId(), User.class);
+        //-----------------------------------------------------------------------------------------------------------------------------
+        //feign实现负载-------------------------------------------------------------------------------------------------------------------
+        User user = userService.getUser(orderParams.getUserId());
+        //----------------------------------------------------------------------------------------------------------------------------
         if (user == null) {
             throw new RuntimeException("未获取到用户信息: " + JSONObject.toJSONString(orderParams));
         }
 //        Product product = restTemplate.getForObject("http://localhost:8070/product/get/" + orderParams.getProductId(), Product.class);
         //从Nacos服务中获取用户服务与商品服务的地址--------------------------------------------------------------------------------------------------
-        Product product = restTemplate.getForObject("http://" + productUrl + "/product/get/" + orderParams.getProductId(), Product.class);
+//        Product product = restTemplate.getForObject("http://" + productUrl + "/product/get/" + orderParams.getProductId(), Product.class);
         //----------------------------------------------------------------------------------------------------------------------------------
+        //服务端实现负载-------------------------------------------------------------------------------------------------------------------------------
+//        Product product = restTemplate.getForObject("http://" + productServer + "/product/get/" + orderParams.getProductId(), Product.class);
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        //feign实现负载-------------------------------------------------------------------------------------------------------------------
+        Product product = productService.getProduct(orderParams.getProductId());
+        //---------------------------------------------------------------------------------------------------------------------------
         if (product == null) {
             throw new RuntimeException("未获取到商品信息: " + JSONObject.toJSONString(orderParams));
         }
@@ -88,8 +110,14 @@ public class OrderServiceImpl implements OrderService {
 
 //        Result<Integer> result = restTemplate.getForObject("http://localhost:8070/product/update_count/" + orderParams.getProductId() + "/" + orderParams.getCount(), Result.class);
         //从Nacos服务中获取用户服务与商品服务的地址-----------------------------------------------------------------------------------------------------------------------------------------------
-        Result<Integer> result = restTemplate.getForObject("http://" + productUrl + "/product/update_count/" + orderParams.getProductId() + "/" + orderParams.getCount(), Result.class);
+//        Result<Integer> result = restTemplate.getForObject("http://" + productUrl + "/product/update_count/" + orderParams.getProductId() + "/" + orderParams.getCount(), Result.class);
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        //服务端实现负载----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//        Result<Integer> result = restTemplate.getForObject("http://" + productServer + "/product/update_count/" + orderParams.getProductId() + "/" + orderParams.getCount(), Result.class);
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        //feign-------------------------------------------------------------------------------------------------------------
+        Result<Integer> result = productService.updateCount(orderParams.getProductId(), orderParams.getCount());
+        //-----------------------------------------------------------------------------------------------------------
         if (result.getCode() != HttpCode.SUCCESS) {
             throw new RuntimeException("库存扣减失败");
         }
@@ -97,9 +125,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     //Nacos获取Nacos中服务名称获取IP和端口号
-    private String getServiceUrl(String serviceName) {
-        ServiceInstance serviceInstance = discoveryClient.getInstances(serviceName).get(0);
-        return serviceInstance.getHost() + ":" + serviceInstance.getPort();
-    }
+//    private String getServiceUrl(String serviceName) {
+//        //不实现负载------------------------------------------------------------------------
+////        ServiceInstance serviceInstance = discoveryClient.getInstances(serviceName).get(0);
+////        return serviceInstance.getHost() + ":" + serviceInstance.getPort();
+//        //--------------------------------------------------------------------------------
+//        //实现负载在客户端实现------------------------------------------------------------------------
+//        List<ServiceInstance> instances = discoveryClient.getInstances(serviceName);
+//        int index = new Random().nextInt(instances.size());
+//        ServiceInstance serviceInstance = instances.get(index);
+//        String url = serviceInstance.getHost() + ":" + serviceInstance.getPort();
+//        log.info("负载均衡后的服务地址为:{}", url);
+//        return url;
+//        //--------------------------------------------------------------------------
+//    }
     //--------------------------------------------------------------------------------------
 }
