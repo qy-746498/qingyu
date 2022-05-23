@@ -2,24 +2,32 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="shop-qingyu-order" />
-        <module name="shop-qingyu-user" />
         <module name="shop-qingyu-product" />
+        <module name="shop-qingyu-user" />
         <module name="shop-qingyu-utils" />
         <module name="shop-qingyu-bean" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="qingyu" target="1.8" />
+      <module name="shop-qingyu-bean" target="8" />
+      <module name="shop-qingyu-order" target="8" />
+      <module name="shop-qingyu-product" target="8" />
+      <module name="shop-qingyu-user" target="8" />
+      <module name="shop-qingyu-utils" target="8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="shop-qingyu-bean" options="-parameters" />
       <module name="shop-qingyu-order" options="-parameters" />
       <module name="shop-qingyu-product" options="-parameters" />
-      <module name="shop-qingyu-springcloud-alibaba" options="-parameters" />
       <module name="shop-qingyu-user" options="-parameters" />
       <module name="shop-qingyu-utils" options="-parameters" />
     </option>

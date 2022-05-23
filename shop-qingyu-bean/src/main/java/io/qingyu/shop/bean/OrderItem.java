@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @TableName("t_order_item")
 public class OrderItem implements Serializable {
     /**
-     * 数据id
+     * 详情id
      */
     @TableId(value = "id", type = IdType.INPUT)
     @TableField(value = "id", fill = FieldFill.INSERT)
