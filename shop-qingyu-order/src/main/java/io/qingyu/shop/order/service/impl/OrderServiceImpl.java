@@ -5,8 +5,8 @@ import io.qingyu.shop.bean.Order;
 import io.qingyu.shop.bean.OrderItem;
 import io.qingyu.shop.bean.Product;
 import io.qingyu.shop.bean.User;
-import io.qingyu.shop.order.feifn.ProductService;
-import io.qingyu.shop.order.feifn.UserService;
+import io.qingyu.shop.order.feifn.ProductRemoteService;
+import io.qingyu.shop.order.feifn.UserRemoteService;
 import io.qingyu.shop.order.mapper.OrderItemMapper;
 import io.qingyu.shop.order.mapper.OrderMapper;
 import io.qingyu.shop.order.service.OrderService;
@@ -15,15 +15,11 @@ import io.qingyu.shop.utils.constants.HttpCode;
 import io.qingyu.shop.utils.resp.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Random;
 
 /**
  * @author qingYu
@@ -37,8 +33,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
     @Autowired
     private OrderItemMapper orderItemMapper;
-    @Autowired
-    private RestTemplate restTemplate;
+//    @Autowired
+//    private RestTemplate restTemplate;
     //集成naco
     @Autowired
     private DiscoveryClient discoveryClient;
@@ -48,9 +44,9 @@ public class OrderServiceImpl implements OrderService {
     //---------------------------------------------------------------
     //feign实现负载------------------------
     @Autowired
-    private UserService userService;
+    private UserRemoteService userRemoteService;
     @Autowired
-    private ProductService productService;
+    private ProductRemoteService productRemoteService;
     //---------------------------------------
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -71,11 +67,16 @@ public class OrderServiceImpl implements OrderService {
 //        User user = restTemplate.getForObject("http://" + userServer + "/user/get/" + orderParams.getUserId(), User.class);
         //-----------------------------------------------------------------------------------------------------------------------------
         //feign实现负载-------------------------------------------------------------------------------------------------------------------
-        User user = userService.getUser(orderParams.getUserId());
+        User user = userRemoteService.getUser(orderParams.getUserId());
         //----------------------------------------------------------------------------------------------------------------------------
         if (user == null) {
             throw new RuntimeException("未获取到用户信息: " + JSONObject.toJSONString(orderParams));
         }
+        //服务容错-----------------------------------------------------------------------------------
+        if (user.getId() == -1){
+            throw new RuntimeException("触发了用户微服务的容错逻辑: " + JSONObject.toJSONString(orderParams));
+        }
+        //---------------------------------------------------------------------------------------------------------------
 //        Product product = restTemplate.getForObject("http://localhost:8070/product/get/" + orderParams.getProductId(), Product.class);
         //从Nacos服务中获取用户服务与商品服务的地址--------------------------------------------------------------------------------------------------
 //        Product product = restTemplate.getForObject("http://" + productUrl + "/product/get/" + orderParams.getProductId(), Product.class);
@@ -84,11 +85,16 @@ public class OrderServiceImpl implements OrderService {
 //        Product product = restTemplate.getForObject("http://" + productServer + "/product/get/" + orderParams.getProductId(), Product.class);
         //------------------------------------------------------------------------------------------------------------------------------------------
         //feign实现负载-------------------------------------------------------------------------------------------------------------------
-        Product product = productService.getProduct(orderParams.getProductId());
+        Product product = productRemoteService.getProduct(orderParams.getProductId());
         //---------------------------------------------------------------------------------------------------------------------------
         if (product == null) {
             throw new RuntimeException("未获取到商品信息: " + JSONObject.toJSONString(orderParams));
         }
+        //服务容错-----------------------------------------------------------------------------------
+        if (product.getId() == -1){
+            throw new RuntimeException("触发了商品微服务的容错逻辑: " + JSONObject.toJSONString(orderParams));
+        }
+        //-----------------------------------------------------------------------------------------------------------
         if (product.getProStock() < orderParams.getCount()) {
             throw new RuntimeException("商品库存不足: " + JSONObject.toJSONString(orderParams));
         }
@@ -116,8 +122,13 @@ public class OrderServiceImpl implements OrderService {
 //        Result<Integer> result = restTemplate.getForObject("http://" + productServer + "/product/update_count/" + orderParams.getProductId() + "/" + orderParams.getCount(), Result.class);
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //feign-------------------------------------------------------------------------------------------------------------
-        Result<Integer> result = productService.updateCount(orderParams.getProductId(), orderParams.getCount());
+        Result<Integer> result = productRemoteService.updateCount(orderParams.getProductId(), orderParams.getCount());
         //-----------------------------------------------------------------------------------------------------------
+        //服务容错-----------------------------------------------------------------------------------
+        if (result.getCode() == 1001){
+            throw new RuntimeException("触发了商品微服务的容错逻辑: " + JSONObject.toJSONString(orderParams));
+        }
+        //------------------------------------------------------------------------------------------------------------------
         if (result.getCode() != HttpCode.SUCCESS) {
             throw new RuntimeException("库存扣减失败");
         }
