@@ -11,12 +11,14 @@
         <module name="shop-qingyu-product" />
         <module name="shop-qingyu-user" />
         <module name="shop-qingyu-utils" />
+        <module name="shop-qingyu-gateway" />
         <module name="shop-qingyu-bean" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="qingyu" target="1.8" />
       <module name="shop-qingyu-bean" target="8" />
+      <module name="shop-qingyu-gateway" target="1.8" />
       <module name="shop-qingyu-order" target="8" />
       <module name="shop-qingyu-product" target="8" />
       <module name="shop-qingyu-user" target="8" />
@@ -26,6 +28,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="shop-qingyu-bean" options="-parameters" />
+      <module name="shop-qingyu-gateway" options="-parameters" />
       <module name="shop-qingyu-order" options="-parameters" />
       <module name="shop-qingyu-product" options="-parameters" />
       <module name="shop-qingyu-user" options="-parameters" />

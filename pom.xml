@@ -14,6 +14,7 @@
         <module>shop-qingyu-user</module>
         <module>shop-qingyu-product</module>
         <module>shop-qingyu-order</module>
+        <module>shop-qingyu-gateway</module>
     </modules>
 
     <parent>

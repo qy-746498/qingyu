@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/qingyu.iml" filepath="$PROJECT_DIR$/.idea/qingyu.iml" />
       <module fileurl="file://$PROJECT_DIR$/shop-qingyu-bean/shop-qingyu-bean.iml" filepath="$PROJECT_DIR$/shop-qingyu-bean/shop-qingyu-bean.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-qingyu-gateway/shop-qingyu-gateway.iml" filepath="$PROJECT_DIR$/shop-qingyu-gateway/shop-qingyu-gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/shop-qingyu-order/shop-qingyu-order.iml" filepath="$PROJECT_DIR$/shop-qingyu-order/shop-qingyu-order.iml" />
       <module fileurl="file://$PROJECT_DIR$/shop-qingyu-product/shop-qingyu-product.iml" filepath="$PROJECT_DIR$/shop-qingyu-product/shop-qingyu-product.iml" />
       <module fileurl="file://$PROJECT_DIR$/shop-qingyu-user/shop-qingyu-user.iml" filepath="$PROJECT_DIR$/shop-qingyu-user/shop-qingyu-user.iml" />
