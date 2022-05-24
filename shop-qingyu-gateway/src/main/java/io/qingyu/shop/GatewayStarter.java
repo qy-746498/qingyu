@@ -13,6 +13,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 public class GatewayStarter {
     public static void main(String[] args) {
-        SpringApplication.run(GatewayStarter.class,args);
+        System.setProperty("csp.sentinel.app.type", "1");
+        SpringApplication.run(GatewayStarter.class, args);
     }
 }
