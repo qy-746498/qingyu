@@ -4,6 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @version 1.0.0
  * @Description 启动用户服的类
  */
+@EnableAsync
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableTransactionManagement(proxyTargetClass = true)

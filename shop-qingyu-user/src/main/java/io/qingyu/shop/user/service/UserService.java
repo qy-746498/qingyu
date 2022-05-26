@@ -12,4 +12,9 @@ public interface UserService {
      * 根据id获取用户信息
      */
     User getUserById(Long userId);
+
+    /**
+     * 验证@Async注解
+     */
+    void asyncMethod();
 }

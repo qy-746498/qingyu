@@ -1,13 +1,6 @@
 server:
   port: 10001
 spring:
-  sleuth:
-    sampler:
-      probability: 1.0
-  zipkin:
-    base-url: http://127.0.0.1:9411
-    discovery-client-enabled: false
-
   application:
     name: server-gateway
   main:
@@ -37,9 +30,9 @@ spring:
       web-context-unify: false
       eager: true
 
-        #routes:
-        #  - id: user-gateway
-        #uri: http://localhost:8060
+      #routes:
+      #  - id: user-gateway
+          #uri: http://localhost:8060
         #    uri: lb://server-user
         #    order: 1
         #    predicates:
@@ -48,7 +41,7 @@ spring:
         #   - StripPrefix=1
 
         #  - id: product-gateway
-        #uri: http://localhost:8070
+          #uri: http://localhost:8070
         #  uri: lb://server-product
         #  order: 1
         #  predicates:
@@ -57,11 +50,11 @@ spring:
         #   - StripPrefix=1
 
         #- id: order-gateway
-        #uri: http://localhost:8080
-        #从nacos中获取服务
+          #uri: http://localhost:8080
+          #从nacos中获取服务
         #  uri: lb://server-order
         #  order: 1
         # predicates:
         #   - Path=/server-order/**
         # filters:
-      #   - StripPrefix=1
+        #   - StripPrefix=1
