@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author qingYu
  * @version 1.0.0
@@ -23,7 +26,6 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long userId) {
         return userMapper.selectById(userId);
     }
-
     @Async
     @Override
     public void asyncMethod() {
