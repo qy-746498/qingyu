@@ -14,6 +14,7 @@ import io.qingyu.shop.params.OrderParams;
 import io.qingyu.shop.utils.constants.HttpCode;
 import io.qingyu.shop.utils.resp.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,11 @@ public class OrderServiceImpl implements OrderService {
     //集成naco
     @Autowired
     private DiscoveryClient discoveryClient;
+
+    //注入rocketmq模板
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
+
     private String userServer = "server-user";
     private String productServer = "server-product";
 
@@ -133,6 +139,8 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("库存扣减失败");
         }
         log.info("库存扣减成功");
+        //把订单信息投放到指定的topic
+        rocketMQTemplate.convertAndSend("order-topic",order);
     }
 
     //Nacos获取Nacos中服务名称获取IP和端口号

@@ -17,12 +17,13 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="qingyu" target="1.8" />
-      <module name="shop-qingyu-bean" target="8" />
+      <module name="shop-qingyu-bean" target="1.8" />
       <module name="shop-qingyu-gateway" target="1.8" />
-      <module name="shop-qingyu-order" target="8" />
-      <module name="shop-qingyu-product" target="8" />
-      <module name="shop-qingyu-user" target="8" />
-      <module name="shop-qingyu-utils" target="8" />
+      <module name="shop-qingyu-order" target="1.8" />
+      <module name="shop-qingyu-product" target="1.8" />
+      <module name="shop-qingyu-springcloud-alibaba" target="1.8" />
+      <module name="shop-qingyu-user" target="1.8" />
+      <module name="shop-qingyu-utils" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
